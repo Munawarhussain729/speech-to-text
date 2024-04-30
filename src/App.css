@@ -10,9 +10,8 @@ h1 {
 }
 
 .main-content {
-  
   text-align: center;
-  height: 20vh;
+  min-height: 20vh;
   background-color: white;
   border-radius: 15px;
   padding: 15px;
