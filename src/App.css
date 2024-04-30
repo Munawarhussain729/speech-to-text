@@ -10,10 +10,12 @@ h1 {
 }
 
 .main-content {
+  
   text-align: center;
   height: 20vh;
   background-color: white;
   border-radius: 15px;
+  padding: 15px;
   margin: 10px 0px;
   border: 1px solid #D3D3D3;
 }
@@ -52,5 +54,8 @@ h1 {
   .button-container button {
     width: 90%;
     margin: 5px 2px;
+  }
+  .main-content{
+    width: 70vw;
   }
 }

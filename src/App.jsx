@@ -7,6 +7,8 @@ import useClipboard from "react-use-clipboard";
 
 function App() {
   const [message, setMessage] = useState('')
+  const [textToCopy, setTextToCopy] = useState('')
+  const [isCopied, setCopied] = useClipboard(textToCopy);
 
   const commands = [
     {
@@ -27,32 +29,23 @@ function App() {
     },
     {
       command: ['Hello', 'Hi'],
-      callback: ({ command }) => setMessage(`Hi there! You said: "${command}"`),
+      callback: ({ command }) => setMessage(`Hi there!`),
       matchInterim: true
     },
     {
-      command: 'Beijing',
-      callback: (command, spokenPhrase, similarityRatio) => setMessage(`${command} and ${spokenPhrase} are ${similarityRatio * 100}% similar`),
-      // If the spokenPhrase is "Benji", the message would be "Beijing and Benji are 40% similar"
-      isFuzzyMatch: true,
-      fuzzyMatchingThreshold: 0.2
-    },
-    {
-      command: ['eat', 'sleep', 'leave'],
-      callback: (command) => setMessage(`Best matching command: ${command}`),
-      isFuzzyMatch: true,
-      fuzzyMatchingThreshold: 0.2,
-      bestMatchOnly: true
-    },
-    {
-      command: ['reset', 'clear', 'end'],
-      callback: ({ resetTranscript }) => resetTranscript()
+      command: 'reset',
+      callback: ({ resetTranscript }) => {
+        console.log('Resetting transcript...');
+        resetTranscript();
+      }
     }
   ]
   const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition({ commands });
-  const [isCopied, setCopied] = useClipboard(transcript);
 
-
+  const handleCopy = () => {
+    setCopied(!isCopied)
+    setTextToCopy(transcript)
+  }
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language: 'en-IN' })
   }
@@ -71,7 +64,7 @@ function App() {
         {transcript}
       </div>
       <div className="button-container">
-        <button onClick={() => { setCopied(!isCopied) }}>  Was it copied? {isCopied ? "Yes! 👍" : "Nope! 👎"}</button>
+        <button onClick={() => { handleCopy() }}>  Was it copied? {isCopied ? "Yes! 👍" : "Nope! 👎"}</button>
         <button onClick={startListening}>Start</button>
         <button onClick={stopListening}>Stop</button>
       </div>
