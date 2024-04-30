@@ -3,9 +3,11 @@ import "regenerator-runtime/runtime"
 import './App.css'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useState } from "react";
+import useClipboard from "react-use-clipboard";
 
 function App() {
   const [message, setMessage] = useState('')
+
   const commands = [
     {
       command: 'I would like to order *',
@@ -43,11 +45,13 @@ function App() {
       bestMatchOnly: true
     },
     {
-      command: 'clear',
+      command: ['reset', 'clear', 'end'],
       callback: ({ resetTranscript }) => resetTranscript()
     }
   ]
   const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition({ commands });
+  const [isCopied, setCopied] = useClipboard(transcript);
+
 
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language: 'en-IN' })
@@ -67,7 +71,7 @@ function App() {
         {transcript}
       </div>
       <div className="button-container">
-        <button>Copy to clipboard</button>
+        <button onClick={() => { setCopied(!isCopied) }}>  Was it copied? {isCopied ? "Yes! 👍" : "Nope! 👎"}</button>
         <button onClick={startListening}>Start</button>
         <button onClick={stopListening}>Stop</button>
       </div>
